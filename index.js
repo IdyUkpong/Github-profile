@@ -1,5 +1,5 @@
 const GITHUB_GRAPHQL_ENDPOINT = "https://api.github.com/graphql";
-const API_TOKEN = "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";
+const API_TOKEN = "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";
 
 const profilePicture = document.querySelector(".profile-pic"),
   detailsDiv = document.querySelector(".profile-details"),
@@ -32,7 +32,7 @@ const profilePicture = document.querySelector(".profile-pic"),
               following {
                 totalCount
               }
-              repositories(first: 20, orderBy: {field: PUSHED_AT, direction: DESC}) {
+              repositories(first: 20, privacy: PUBLIC, orderBy: {field: PUSHED_AT, direction: DESC}) {
                 totalCount
                 nodes {
                   name
@@ -70,7 +70,6 @@ const profilePicture = document.querySelector(".profile-pic"),
     `,
   };
 
-  console.log(data);
   //declaring variables in graphql queries
 
   //awaiting fetch request
@@ -116,26 +115,24 @@ const profilePicture = document.querySelector(".profile-pic"),
       socials.appendChild(twitterHandle);
       repoCount.innerHTML = userData.repositories.totalCount;
       const repoArr = userData.repositories.nodes;
-      console.log(repoArr)
-      const repoIndexArr = [0, 1, 2, 5, 7,8, 16, 18, 19];
-      repoIndexArr.map((repoIndex) => {
+      console.log(repoArr);
+      // const repoIndexArr = [0, 1, 2, 5, 7,8, 16, 18, 19];
+      repoArr.map((repo) => {
         const repoDiv = document.createElement("div");
         const repoName = document.createElement("a");
         const repoDescription = document.createElement("span");
         const repoPriLang = document.createElement("span");
         const repoUpdatedAt = document.createElement("span");
-        const repoDate = repoArr[repoIndex].updatedAt;
+        const repoDate = repo.updatedAt;
         const date = new Date(repoDate);
         const requiredDate = date.toLocaleString("en-us", {
           month: "short",
           day: "numeric",
         });
-        repoName.innerHTML = repoArr[repoIndex].name;
-        repoName.href = repoArr[repoIndex].url;
-        repoDescription.innerHTML = repoArr[repoIndex].description;
-        if (repoArr[repoIndex].primaryLanguage) {
-          repoPriLang.innerHTML = repoArr[repoIndex].primaryLanguage.name;
-        }
+        repoName.innerHTML = repo.name;
+        repoName.href = repo.url;
+        repoDescription.innerHTML = repo.description;
+        repoPriLang.innerHTML = repo.primaryLanguage?.name;
         repoUpdatedAt.innerHTML = `Updated on ${requiredDate}`;
         repoDiv.classList.add("repo");
         repoName.classList.add("repo-name");
